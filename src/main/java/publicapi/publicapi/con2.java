@@ -36,13 +36,11 @@ public class con2 {
 
                 BufferedReader br = new BufferedReader(new InputStreamReader(urlconnection.getInputStream(), "UTF-8"));
 
-                System.out.println("허허?" + br.readLine());
-
+                br.readLine();
                 String returnLine;
 
                 while ((returnLine = br.readLine()) != null) {
                     result.append(returnLine);
-                    System.out.println("이거임?" + br.readLine());
                 }
 
                 String StringifyResult = result.toString();
@@ -58,21 +56,33 @@ public class con2 {
 
 
                 JSONArray jsonArray  = new JSONArray(itemArrayNode.toString());
+                String[] jsonKeysForDouble = {"clciQy", "naQy", "dryMatter", "ashsQy", "crfbQy", "totEdblfibrQy", "vtmaQy", "ptssQy", "mitrQy", "slwtEdblfibrQy", "liacQy", "fatQy", "lnacQy", "trypQy", "crbQy", "phphQy", "protQy", "inslbltyEdblfibrQy"};
+                String[] jsonKeysForInt = {"mtralPc", "feedSeqNo", "feedClCode", "upperFeedClCode"};
+                for (int i = 0; i < jsonArray.length(); i++) {
+                    JSONObject jsonObject = jsonArray.getJSONObject(i);
+                    for (int j = 0; j < jsonKeysForDouble.length; j++) {
+                        if (!jsonObject.getString(jsonKeysForDouble[j]).equals("")) {
+                            double JsonValue = Double.parseDouble(jsonObject.getString(jsonKeysForDouble[j]));
+                            jsonObject.put(jsonKeysForDouble[j], JsonValue);
+                        }
+                    }
 
-                for (Object o : jsonArray) {
-                    System.out.println("ㄷ ㄷ " + o.toString());
+                    for (int j = 0; j < jsonKeysForInt.length; j++) {
+                        if (!jsonObject.getString(jsonKeysForInt[j]).equals("")) {
+                            int JsonValue = Integer.parseInt(jsonObject.getString(jsonKeysForInt[j]));
+                            jsonObject.put(jsonKeysForInt[j], JsonValue);
+                        }
+                    }
+
+
+                    System.out.println("데이터 " + i + " " + jsonObject.toString());
                     System.out.println();
                 }
-
-
                 urlconnection.disconnect();
-
                 return json;
-
             } catch (Exception e) {
                 e.printStackTrace();
             }
-
 
             return result.toString();
         }
